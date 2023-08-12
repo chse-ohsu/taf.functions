@@ -1,0 +1,13 @@
+Package: taf.functions
+Title: Assist Researchers in Analyzing TAF Data
+Version: 0.0.0.9000
+Authors@R: 
+    person("Conor", "Hennessy", , "hennessc@ohsu.edu", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: a number of functions intended to be used with the Transformed 
+  Medicaid Statistical Information System (T-MSIS) Analytic Files (TAF). 
+  Functions perform common research tasks on TAF data.
+License: use_mit_license()
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
