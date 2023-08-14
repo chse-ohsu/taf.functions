@@ -4,12 +4,7 @@
 \alias{get_apr_data_quality_measures}
 \title{Name: get_apr_data_quality_measures}
 \usage{
-get_apr_data_quality_measures(
-  taf_prvdr_base_df,
-  taf_prvdr_taxonomy_df = NULL,
-  taf_prvdr_location_df = NULL,
-  year_col = NULL
-)
+get_apr_data_quality_measures(taf_prvdr_base_df, year_col = NULL)
 }
 \arguments{
 \item{taf_prvdr_base_df}{\itemize{
@@ -17,7 +12,7 @@ get_apr_data_quality_measures(
 }}
 
 \item{year_col}{\itemize{
-\item a character or string with the name of the column with the year
+\item optional. A character or string with the name of the column with the year
 if such a column exists (no such column is in the raw TAF data, but is necessary
 if you are analyzing multiple years of data)
 }}
@@ -29,6 +24,6 @@ be downloaded with the 'data (csv)' link at the URL above
 \description{
 Description: replication code for -
 https://www.medicaid.gov/dq-atlas/landing/topics/single/map?topic=g6m94&tafVersionId=34
-the following measures/topics are currently finished -
+the following 'topics' are currently finished -
 'Facility/Group/Individual Code'
 }

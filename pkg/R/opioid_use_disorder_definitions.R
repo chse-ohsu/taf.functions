@@ -1,7 +1,11 @@
 #' Name: get_icd10_codes_for_opioid_use_disorder
 #' 
-#' Description: 
-#' @return
+#' Description: returns all ICD10 codes for opioid use disorder as a dictionary
+#' ICD10 codes were chosen and named based on the information here:
+#' https://www.icd10data.com/ICD10CM/Codes/F01-F99/F10-F19/F11-
+#' 
+#' @return list of ICD10 codes as a dictionary with condition names as words and
+#' ICD10 codes as defitions
 #' @export
 get_icd10_codes_for_opioid_use_disorder <- function(){
   return(list(
@@ -70,8 +74,12 @@ get_icd10_codes_for_opioid_use_disorder <- function(){
 
 #' Name: get_icd9_codes_for_opioid_use_disorder
 #' 
-#' Description: 
-#' @return
+#' Description: returns all ICD9 codes for opioid use disorder as a dictionary
+#' ICD9 codes were chosen and named based on the information here:
+#' https://www.ncbi.nlm.nih.gov/books/NBK557173/table/sb256.tab7/
+#' 
+#' @return list of ICD9 codes as a dictionary with condition names as words and
+#' ICD9 codes as defitions
 #' @export
 get_icd9_codes_for_opioid_use_disorder <- function(){
   return(list(
@@ -90,10 +98,18 @@ get_icd9_codes_for_opioid_use_disorder <- function(){
 
 
 
-#' Name: get_icd_codes_for_opioid_use_disorder
+#' Name: get_icd10_codes_for_opioid_use_disorder
 #' 
-#' Description: 
-#' @return
+#' Description: returns all icd9 and icd10 codes for opioid use disorder as a
+#'  dictionary.
+#' ICD10 codes were chosen and named based on the information here:
+#' https://www.icd10data.com/ICD10CM/Codes/F01-F99/F10-F19/F11-
+#' 
+#' ICD9 codes were chosen and named based on the information here:
+#' https://www.ncbi.nlm.nih.gov/books/NBK557173/table/sb256.tab7/
+#' 
+#' @return list of ICD10 codes as a dictionary with condition names as words and
+#' icd 10 codes as defitions
 #' @export
 get_icd_codes_for_opioid_use_disorder <- function(){
   return(list(
