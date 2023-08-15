@@ -43,14 +43,20 @@ Run the following line of R Code:
 
 *install.packages(‘devtools’)*
 
+(taf.functions currently has no dependencies. Devtools is only needed
+for installation as taf.functiosn is not on CRAN and thus cannot be
+installed via install.packages())
+
 3\) <u>Install ‘taf.functions’ package:</u>
 
 *devtools::install_github(chse-ohsu/taf.functions)*
 
 4\) <u>Start Using Functions:</u>
 
+*library(taf.functions)*
+
 *output_data \<-
-taf.functions::get_apr_data_quality_measures(taf_prvdr_base_df=my_data)*
+get_apr_data_quality_measures(taf_prvdr_base_df=my_data)*
 
 Documentation and examples for all the functions are at the bottom of
 this page, or can be obained by typing ?function,
@@ -120,10 +126,10 @@ e.g.:
 
 ## List of Current Functions:
 
-<u>get_apr_data_quality_measures()</u>
+<u>**get_apr_data_quality_measures()**</u>
 
-Description: This function replicates the analysis of the data quality
-of the APR files that DQ atlas does here:
+<u>Description:</u> This function replicates the analysis of the data
+quality of the APR files that DQ atlas does here:
 https://www.medicaid.gov/dq-atlas/landing/topics/single/map?topic=g6m94&tafVersionId=34
 when the topic ‘Facility/Group/Individual Code’ is selected.
 
@@ -137,7 +143,7 @@ function can re-create this analysis for years/releases where the DQ
 Atlas data is not available, or on incomplete subsets of taf_prvdr_base
 data that may be of interest to researchers.
 
-Parameters:
+<u>Parameters:</u>
 
 taf_prvdr_base_df - dataframe, must have data from ‘taf_prvdr_base’ file
 
@@ -148,7 +154,7 @@ data, but is necessary if you are analyzing multiple years of data).
 Returns: a dataframe with data quality measures stratified by state (and
 year, if applicable)
 
-Examples:
+<u>Examples:</u>
 
 \(1\)
 
@@ -169,6 +175,116 @@ Examples:
 `my_data_2017$year <- rbind(my_data_2016, my_data_2017)`
 
 `data_quality_df <-get_apr_data_quality_measures(get_apr_data_quality_measures(taf_prvdr_base_df=my_data, year_col='year')`
+
+<u>**get_icd10_codes_for_opioid_use_disorder()**</u>
+
+<u>Description:</u> returns all ICD10 codes for opioid use disorder as a
+dictionary. ICD10 codes were chosen and named based on the information
+here:
+
+https://www.icd10data.com/ICD10CM/Codes/F01-F99/F10-F19/F11-
+
+No parameters.
+
+Returns a list of ICD10 codes as a dictionary with condition names as
+words and ICD10 codes as definitions.
+
+<u>Example:</u>
+
+oud_icd10_codes \<- get_icd10_codes_for_opioid_use_disorder()
+
+<u>**get_icd9_codes_for_opioid_use_disorder()**</u>
+
+<u>Description:</u> returns all ICD9 codes for opioid use disorder as a
+dictionary. ICD9 codes were chosen and named based on the information
+here:
+
+https://www.ncbi.nlm.nih.gov/books/NBK557173/table/sb256.tab7/
+
+No parameters.
+
+Returns a list of ICD9 codes as a dictionary with condition names as
+words and ICD9 codes as definitions.
+
+<u>Example:</u>
+
+oud_icd9_codes \<- get_icd9_codes_for_opioid_use_disorder()
+
+<u>**get_icd_codes_for_opioid_use_disorder()**</u>
+
+<u>Description:</u> returns all ICD9 and 10 codes for opioid use
+disorder as a dictionary. ICD9 and 10 codes were chosen and named based
+on the information here:
+
+https://www.ncbi.nlm.nih.gov/books/NBK557173/table/sb256.tab7/
+
+https://www.icd10data.com/ICD10CM/Codes/F01-F99/F10-F19/F11-
+
+No parameters.
+
+Returns a list of ICD9 and 10 codes as a dictionary with condition names
+as words and ICD9 and 10 codes as definitions.
+
+<u>Example:</u>
+
+oud_icd_codes \<- get_icd_codes_for_opioid_use_disorder()
+
+<u>**get_taf_opioid_use_disorder_patients()**</u>
+
+<u>Description:</u> returns a dataframe with the msis_id, bene_id, and
+state_cd of every beneficiary in the input data with an opioid related
+disorder, defined using the National Quality Forum (NQF 12) approach:
+
+“enrollees with OUD diagnoses (using International Classification of
+Diseases, Ninth Revision \[ICD-codes 304.0x, 305.5x and ICD-10 codes
+F11.xxx) recorded during an inpatient stay or a visit to an outpatient
+facility or office.”
+
+The specific implications of this when working with TAF are that
+inpatient and outpatient diagnostic codes will be considered (meaning
+all columns labeled ‘dgns_cd’ in the taf_inpatient_header and
+taf_other_services_header, as outpatient codes are stored in the other
+services header file). However, longterm care diagnostic codes will not
+be considered.
+
+<u>Parameters:</u>
+
+taf_inpatient_df - dataframe - data from the ‘taf_inpatient_header’ file
+(contains inpatient ICD codes)
+
+taf_other_services_df - dataframe - data from the
+‘taf_other_services_header’ file (contains outpatient ICD codes)
+
+year_col - string - OPTIONAL (defaults to NULL) - name of the column
+containing the year the data is from, e.g. if your year data is in a
+column named ‘year’, put ‘year’. Since TAF data arrives in separate
+files by year, there is no column to identify year in each file in the
+raw taf data, you must add it yourself when using multiple years of TAF
+data. This parameter should ALWAYS be used if there are multiple years
+of data in your dataframe.
+
+allow_invalid_codes - boolean - OPTIONAL (defaults to TRUE) - some ICD
+codes are entered incorrectly, but it can still be inferred that they
+refer to some sort of opioid use disorder. All ICD10 codes for OUD start
+with F11 - thus, an invalid code starting with F11 will likely have some
+OUD. This input defaults to TRUE - if it is set to FALSE, patients with
+invalid codes will be excluded from the results.
+
+opioid_related_disorder_icd_codes - list- OPTIONAL - defaults to the
+list of ICD codes for OUD, based on the NQF 12 approach described above
+and returned by the get_icd_codes_for_opioid_use_disorder in this
+package. If you want to use a different definition, you may add override
+this input with your own list or vector of ICD codes. IMPORTANT NOTE: if
+you wish to do this, you must also use ‘allow_invalid_codes=FALSE’
+(there is no way of know if - say - an invalid F11.x code belongs in
+list that only includes some F11 codes)
+
+returns - dataframe with the bene_id, msis_id, state_cd, and if year_col
+is provided, year, of each TAF beneficiary with an opioid related
+disorder. Each patient is included only once per year (once only if year
+is not provided). As such, the number of rows of the dataframe (or
+number of rows for each year) is the number of opioid related disorder
+patient.
 
 ## Contact Information
 

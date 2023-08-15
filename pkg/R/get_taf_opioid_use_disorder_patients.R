@@ -11,6 +11,7 @@
 #' dgns code in the taf_inpatient_header adn taf_other_services_header, as 
 #' oupatient codes are stored in the other services header file). However, long
 #' term care diagnostic codes will not be considered.
+#' 
 #' @param taf_inpatient_df - dataframe - data from the 'taf_inpatient_header' 
 #' file (contains inpatient ICD codes)
 #'  
