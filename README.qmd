@@ -197,6 +197,30 @@ opioid_related_disorder_icd_codes - list- OPTIONAL - defaults to the list of ICD
 
 returns - dataframe with the bene_id, msis_id, state_cd, and if year_col is provided, year, of each TAF beneficiary with an opioid related disorder. Each patient is included only once per year (once only if year is not provided). As such, the number of rows of the dataframe (or number of rows for each year) is the number of opioid related disorder patient.
 
+**fill_in_missing_demographic_data()**
+
+[Description:]{.underline} Many people fill out demographic information for one year but not others. This function fills in missing demographic data in instances where data is missing in some years but available and consistent in others. If information is missing in all years, this function does nothing, and if information is missing in some years and information in the other years is not consistent, this function does nothing.
+
+[Parameters:]{.underline}
+
+demog_data - dataframe or similar structure, containing the taf_demog_elig_base file or a subset
+
+year_col - name of the column that contains the year. TAF data does not initially have a year column, as it comes in discreet files by year. However, multiple, distinguishable years are necessary for this function. A year column must be therefore be added.
+
+demog_col - name of the column with missing values you want to impute (e.g. race_ethncty_cd, sex_cd, etc)
+
+returns - dataframe with some missing observations in demog_col filled in in a column called \<demog_col\>\_imputed. Original values remain in the original column
+
+[Example:]{.underline}
+
+new_df \<- fill_in_missing_demographic_data \<- function(
+
+demog_data=taf_demog_elig_base_2016_to_2018_df,
+
+year_col='year',
+
+demog_col='race_ethncty_cd')
+
 ## Contact Information
 
 Conor Hennessy, Research Engineer III
