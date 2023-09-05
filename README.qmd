@@ -7,7 +7,7 @@ editor: visual
 
 ## Purpose
 
-The purpose of this repository is to provide assistance to people who which to work with data from the T-MSIS Analytic Files (TAF data). The repository contains a number of functions that perform common research tasks using the TAF data, such as providing lists of beneficiaries with certain conditions, evaluating data quality, etc.
+This repository's purpose is to assist people who work with data from the T-MSIS Analytic Files (TAF data). The repository contains a number of functions that perform common research tasks using the TAF data, such as providing lists of beneficiaries with certain conditions, evaluating data quality, constructing measures, and so on.
 
 Using this repository provides value to researchers by:
 
