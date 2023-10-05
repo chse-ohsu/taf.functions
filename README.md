@@ -1,0 +1,339 @@
+TAF Open Source Functions
+================
+Conor Hennessy
+
+## Purpose
+
+This repository’s purpose is to assist people who work with data from
+the T-MSIS Analytic Files (TAF data). The repository contains a number
+of functions that perform common research tasks using the TAF data, such
+as providing lists of beneficiaries with certain conditions, evaluating
+data quality, constructing measures, and so on.
+
+Using this repository provides value to researchers by:
+
+-   allowing those working with TAF to utilize easy-to-use functions to
+    perform frequently needed data preparation and manipulation
+    functions rather than writing time-consuming functions themselves
+
+-   providing consistent and standardized procedures and definitions
+    (changes/overriding definitions is possible for those who wish)
+
+## Setup & Requirements
+
+To use the taf.functions package, you will first need to install R and
+the ‘devtools’ package for R (the devtools package is necessary to
+install packages that are on GitHub rather than Cran).
+
+<u>1) Install R:</u>
+
+-   Windows: [Download R-4.3.1 for Windows. The R-project for
+    statistical
+    computing.](https://cran.r-project.org/bin/windows/base/)
+
+-   OS X: [R for macOS
+    (r-project.org)](https://cran.r-project.org/bin/macosx/)
+
+-   Linux: [Index of /bin/linux
+    (r-project.org)](https://cran.r-project.org/bin/linux/)
+
+2\) Install ‘devtools’ package:
+
+Run the following line of R Code:
+
+*install.packages(‘devtools’)*
+
+(taf.functions currently has no dependencies. Devtools is only needed
+for installation as taf.functions is not on CRAN and thus cannot be
+installed via install.packages())
+
+3\) <u>Install ‘taf.functions’ package:</u>
+
+*devtools::install_github(chse-ohsu/taf.functions,* subdir = ‘pkg’*)*
+
+4\) <u>Start Using Functions:</u>
+
+*library(taf.functions)*
+
+*output_data \<-
+get_apr_data_quality_measures(taf_prvdr_base_df=my_data)*
+
+Documentation and examples for all the functions are at the bottom of
+this page or can be obtained by typing ?function,
+(e.g. ?get_apr_data_quality_measures).
+
+## What If I Do Not Use R?
+
+Most programming languages (including Stata) allow you to run code
+written in another language. Thus, it will be possible for you to use
+these R functions while still working in your preferred programming
+language. It will be necessary to install R first, otherwise these
+functions will not run. However, R is free to install (for instructions,
+see ‘requirements - install R’ above).
+
+I will provide an example in Stata, as it is commonly used by
+researchers working with TAF data. I may be able to provide further
+examples of how to run R functions in other languages or write the
+functions themselves in other languages upon request. Please contact me
+if you are interested in this possibility.
+
+**Stata Example:**
+
+You must first write an R script that simply reads in the data you wish
+to use, calls the function you wish to use, and writes any results you
+wish to use to a format you can import to Stata. For example:
+
+`my_data <- read.csv('/path/to/my_data/data.csv')`
+
+`output_data <- taf.functions::get_apr_data_quality_measures(taf_prvdr_base_df=my_data)`
+
+`write.csv(output_data, '/path/to/my/data/output_data.csv'`
+
+Save this R script, and there is no more R programming necessary.
+
+The Stata ‘shell’ command will execute the rest of the code on the line
+as if it were typed into the shell for the operating system. For
+example, ‘shell rmdir dir_name’ would remove a directory called
+‘dir_name’.
+
+The command to execute an R script on most platforms (Windows, OS X, or
+Linux) is
+
+`Rscript my_rscript.R`
+
+In Windows, you must first put the path to your R executable file, e.g.
+
+`"C:\R\R-4.2.1\bin\R.exe" Rscript my_rscript.R`
+
+Thus, to execute an R script, you can use ‘shell Rscript’, or ’shell
+“C:\R\R-4.2.1\bin\R.exe” Rscript. Say you saved your R script to
+my_r\_script.R - the following Stata code should execute your R script
+from Stata:
+
+`<your stata code here>`
+
+`export delimited my_taf_data.csv`
+
+`shell "C:\R\R-4.2.1\bin\R.exe" Rscript my_r_script.R`
+
+`import delimited my_rscript_output.csv`
+
+`<your stata code here>`
+
+NOTE: in older versions of Windows, use ‘CMD BATCH’ instead of Rscript,
+e.g.:
+
+`shell "C:\R\R-4.2.1\bin\R.exe" CMD BATCH my_r_script.R`
+
+## List of Current Functions:
+
+<u>**get_apr_data_quality_measures()**</u>
+
+<u>Description:</u> This function replicates the analysis of the data
+quality of the APR files that DQ atlas does here:
+https://www.medicaid.gov/dq-atlas/landing/topics/single/map?topic=g6m94&tafVersionId=34
+when the topic ‘Facility/Group/Individual Code’ is selected.
+
+The function takes data from the ‘taf_prvdr_base’ file as input, and
+returns data similar to what is contained in the .csvs you can obtain by
+clicking on ‘data (csv)’ above the map at the link above.
+
+However, the DQ Atlas website does not publish analysis for every
+year/release combination for which data is available. Thus, this
+function can re-create this analysis for years/releases where the DQ
+Atlas data is unavailable or on incomplete subsets of taf_prvdr_base
+data that may interest researchers.
+
+<u>Parameters:</u>
+
+taf_prvdr_base_df - dataframe, must have data from ‘taf_prvdr_base’ file
+
+year_col - optional. A character or string with the name of the column
+with the year if such a column exists (no such column is in the raw TAF
+data, but is necessary if you are analyzing multiple years of data).
+
+Returns: a dataframe with data quality measures stratified by state (and
+year, if applicable)
+
+<u>Examples:</u>
+
+\(1\)
+
+`my_data <- read.csv('/path/to/my/taf/data/taf_prvdr_base.csv')`
+
+`data_quality_df <- get_apr_data_quality_measures(get_apr_data_quality_measures(taf_prvdr_base_df=my_data)`
+
+\(2\)
+
+`my_data_2016 <- read.csv('/path/to/my/taf/data/taf_prvdr_base_2016.csv')`
+
+`my_data_2016$year <- 2016`
+
+`my_data_2017 <- read.csv('/path/to/my/taf/data/taf_prvdr_base_2017.csv')`
+
+`my_data_2017$year <- 2017`
+
+`my_data_2017$year <- rbind(my_data_2016, my_data_2017)`
+
+`data_quality_df <-get_apr_data_quality_measures(get_apr_data_quality_measures(taf_prvdr_base_df=my_data, year_col='year')`
+
+<u>**get_icd10_codes_for_opioid_use_disorder()**</u>
+
+<u>Description:</u> returns all ICD10 codes for opioid use disorder as a
+dictionary. ICD10 codes were chosen and named based on the information
+here:
+
+https://www.icd10data.com/ICD10CM/Codes/F01-F99/F10-F19/F11-
+
+No parameters.
+
+Returns a list of ICD10 codes as a dictionary with condition names as
+words and ICD10 codes as definitions.
+
+<u>Example:</u>
+
+oud_icd10_codes \<- get_icd10_codes_for_opioid_use_disorder()
+
+<u>**get_icd9_codes_for_opioid_use_disorder()**</u>
+
+<u>Description:</u> returns all ICD9 codes for opioid use disorder as a
+dictionary. ICD9 codes were chosen and named based on the information
+here:
+
+https://www.ncbi.nlm.nih.gov/books/NBK557173/table/sb256.tab7/
+
+No parameters.
+
+Returns a list of ICD9 codes as a dictionary with condition names as
+words and ICD9 codes as definitions.
+
+<u>Example:</u>
+
+oud_icd9_codes \<- get_icd9_codes_for_opioid_use_disorder()
+
+<u>**get_icd_codes_for_opioid_use_disorder()**</u>
+
+<u>Description:</u> returns all ICD9 and 10 codes for opioid use
+disorder as a dictionary. ICD9 and 10 codes were chosen and named based
+on the information here:
+
+https://www.ncbi.nlm.nih.gov/books/NBK557173/table/sb256.tab7/
+
+https://www.icd10data.com/ICD10CM/Codes/F01-F99/F10-F19/F11-
+
+No parameters.
+
+Returns a list of ICD9 and 10 codes as a dictionary with condition names
+as words and ICD9 and 10 codes as definitions.
+
+<u>Example:</u>
+
+oud_icd_codes \<- get_icd_codes_for_opioid_use_disorder()
+
+<u>**get_taf_opioid_use_disorder_patients()**</u>
+
+<u>Description:</u> returns a dataframe with the msis_id, bene_id, and
+state_cd of every beneficiary in the input data with an opioid-related
+disorder, defined using the National Quality Forum (NQF 12) approach:
+
+“enrollees with OUD diagnoses (using International Classification of
+Diseases, Ninth Revision \[ICD-codes 304.0x, 305.5x and ICD-10 codes
+F11.xxx) recorded during an inpatient stay or a visit to an outpatient
+facility or office.”
+
+The specific implications of this when working with TAF are that
+inpatient and outpatient diagnostic codes will be considered (meaning
+all columns labeled ‘dgns_cd’ in the taf_inpatient_header and
+taf_other_services_header, as outpatient codes are stored in the other
+services header file). However, longterm care diagnostic codes will not
+be considered.
+
+<u>Parameters:</u>
+
+taf_inpatient_df - dataframe - data from the ‘taf_inpatient_header’ file
+(contains inpatient ICD codes)
+
+taf_other_services_df - dataframe - data from the
+‘taf_other_services_header’ file (contains outpatient ICD codes)
+
+year_col - string - OPTIONAL (defaults to NULL) - name of the column
+containing the year the data is from, e.g. if your year data is in a
+column named ‘year’, put ‘year’. Since TAF data arrives in separate
+files by year, there is no column to identify year in each file in the
+raw taf data, you must add it yourself when using multiple years of TAF
+data. This parameter should ALWAYS be used if there are multiple years
+of data in your dataframe.
+
+allow_invalid_codes - boolean - OPTIONAL (defaults to TRUE) - some ICD
+codes are entered incorrectly, but it can still be inferred that they
+refer to some sort of opioid use disorder. All ICD10 codes for OUD start
+with F11 - thus, an invalid code starting with F11 will likely have some
+OUD. This input defaults to TRUE - if it is set to FALSE, patients with
+invalid codes will be excluded from the results.
+
+opioid_related_disorder_icd_codes - list- OPTIONAL - defaults to the
+list of ICD codes for OUD, based on the NQF 12 approach described above
+and returned by the get_icd_codes_for_opioid_use_disorder in this
+package. If you want to use a different definition, you may add override
+this input with your own list or vector of ICD codes. IMPORTANT NOTE: if
+you wish to do this, you must also use ‘allow_invalid_codes=FALSE’
+(there is no way to know if - say - an invalid F11.x code belongs in
+list that only includes some F11 codes)
+
+returns - dataframe with the bene_id, msis_id, state_cd, and if year_col
+is provided, year, of each TAF beneficiary with an opioid related
+disorder. Each patient is included only once per year (once only if year
+is not provided). As such, the number of rows of the dataframe (or
+number of rows for each year) is the number of opioid related disorder
+patient.
+
+**fill_in_missing_demographic_data()**
+
+<u>Description:</u> Many people fill out demographic information for one
+year but not others. This function fills in missing demographic data in
+instances where data is missing in some years but available and
+consistent in others. If information is missing in all years, this
+function does nothing, and if information is missing in some years and
+information in the other years is not consistent, this function does
+nothing.
+
+<u>Parameters:</u>
+
+demog_data - dataframe or similar structure, containing the
+taf_demog_elig_base file or a subset
+
+year_col - name of the column that contains the year. TAF data does not
+initially have a year column, as it comes in discreet files by year.
+However, multiple, distinguishable years are necessary for this
+function. A year column must be therefore be added.
+
+demog_col - name of the column with missing values you want to impute
+(e.g. race_ethncty_cd, sex_cd, etc)
+
+returns - dataframe with some missing observations in demog_col filled
+in in a column called \<demog_col\>\_imputed. Original values remain in
+the original column
+
+<u>Example:</u>
+
+new_df \<- fill_in_missing_demographic_data \<- function(
+
+demog_data=taf_demog_elig_base_2016_to_2018_df,
+
+year_col=‘year’,
+
+demog_col=‘race_ethncty_cd’)
+
+## Contact Information
+
+Conor Hennessy, Research Engineer III
+
+hennessc@ohsu.edu
+
+Center for Health System Effectiveness
+
+3030 S Moody Ave
+
+3030 Moody Building Suite 200
+
+Portland, OR 97239
