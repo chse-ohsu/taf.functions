@@ -11,7 +11,7 @@
 #' @return same data frame with leading zeros removed from specified column or
 #' all dgns columns
 #' @export
-remove_tennessee_zeros <- function(tennessee_data, col='all'){
+remove_tennessee_icd_leading_zeros <- function(tennessee_data, col='all'){
   tennessee_data <- as.data.frame(tennessee_data)
   
 
@@ -37,3 +37,12 @@ remove_tennessee_zeros <- function(tennessee_data, col='all'){
   
   return(tennessee_data)
 }
+
+tennessee_df <- chse::get_taf(
+  file_type='taf_inpatient_header',
+  state='TN',
+  year=2018,
+  shard=0
+)
+
+tennessee_df <- remove_tennessee_icd_leading_zeros(tennessee_df)
