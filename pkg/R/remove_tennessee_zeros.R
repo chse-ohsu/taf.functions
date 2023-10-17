@@ -1,7 +1,5 @@
 #!/bin/env R
 
-library(tidyverse)
-
 #' Name: remove_tennessee_zeros
 #' 
 #' Description: removes leading zeros from Tennessee ICD codes, given a 
@@ -19,9 +17,11 @@ remove_tennessee_zeros <- function(tennessee_data, col='all'){
 
   if (col=='all'){
     
-  # Apply to all "dgns" columns
-    tennessee_data <- tennessee_data %>% 
-      mutate(across(contains("dgns"), ~ gsub("^0+", "", .x)))
+  # Apply to all "dgns_cd" columns
+    dgns_cols <- grep('dgns_cd',colnames(tennessee_data), value=TRUE)
+    for (col in dgns_cols){
+      tennessee_data[, col] <- gsub("^0+", "", tennessee_data[,col])
+    }
     
   } else{
     
@@ -37,4 +37,3 @@ remove_tennessee_zeros <- function(tennessee_data, col='all'){
   
   return(tennessee_data)
 }
-
