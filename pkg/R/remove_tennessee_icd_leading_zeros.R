@@ -37,12 +37,3 @@ remove_tennessee_icd_leading_zeros <- function(tennessee_data, col='all'){
   
   return(tennessee_data)
 }
-
-# tennessee_df <- chse::get_taf(
-#   file_type='taf_long_term_header',
-#   state='TN',
-#   year=2019,
-#   shard=0
-# )
-# 
-# tennessee_df <- remove_tennessee_icd_leading_zeros(tennessee_df)
