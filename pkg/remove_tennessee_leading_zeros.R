@@ -14,10 +14,10 @@
 remove_tennessee_icd_leading_zeros <- function(tennessee_data, col='all'){
   tennessee_data <- as.data.frame(tennessee_data)
   
-
+  
   if (col=='all'){
     
-  # Apply to all "dgns_cd" columns
+    # Apply to all "dgns_cd" columns
     dgns_cols <- grep('dgns_cd',colnames(tennessee_data), value=TRUE)
     for (col in dgns_cols){
       tennessee_data[, col] <- gsub("^0+", "", tennessee_data[,col])
