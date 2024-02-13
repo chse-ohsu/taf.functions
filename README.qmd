@@ -37,7 +37,7 @@ Run the following line of R Code:
 
 3\) [Install 'taf.functions' package:]{.underline}
 
-*devtools::install_github(chse-ohsu/taf.functions,* subdir = 'pkg'*)*
+*devtools::install_github('chse-ohsu/taf.functions',* subdir = 'pkg'*)*
 
 4\) [Start Using Functions:]{.underline}
 
@@ -75,7 +75,7 @@ In Windows, you must first put the path to your R executable file, e.g.
 
 `"C:\R\R-4.2.1\bin\R.exe" Rscript my_rscript.R`
 
-Thus, to execute an R script, you can use 'shell Rscript', or 'shell "C:\\R\\R-4.2.1\\bin\\R.exe" Rscript. Say you saved your R script to my_r\_script.R - the following Stata code should execute your R script from Stata:
+Thus, to execute an R script, you can use 'shell Rscript', or 'shell "C:\\R\\R-4.2.1\\bin\\R.exe" Rscript. Say you saved your R script to my_r_script.R - the following Stata code should execute your R script from Stata:
 
 `<your stata code here>`
 
@@ -213,7 +213,7 @@ returns - dataframe with some missing observations in demog_col filled in in a c
 
 [Example:]{.underline}
 
-new_df \<- fill_in_missing_demographic_data \<- function(
+new_df \<- fill_in_missing_demographic_data(
 
 demog_data=taf_demog_elig_base_2016_to_2018_df,
 
