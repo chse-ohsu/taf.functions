@@ -209,7 +209,7 @@ the execution of R code. Thus, they will only work on systems where R is
 installed and accessible. For the same reason, they will not work in the
 VRDC environment, where R can only be accessed via Databricks.
 
-List of Current Functions:
+## List of Current Functions:
 
 <u>**get_apr_data_quality_measures()**</u>
 
