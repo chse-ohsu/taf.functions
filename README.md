@@ -1,5 +1,4 @@
-TAF Open Source Functions
-================
+# TAF Open Source Functions
 Conor Hennessy
 
 ## Purpose
@@ -49,7 +48,7 @@ installed via install.packages())
 
 3\) <u>Install ‘taf.functions’ package:</u>
 
-*devtools::install_github(chse-ohsu/taf.functions,* subdir = ‘pkg’*)*
+*devtools::install_github(‘chse-ohsu/taf.functions’,* subdir = ‘pkg’*)*
 
 4\) <u>Start Using Functions:</u>
 
@@ -71,7 +70,7 @@ language. It will be necessary to install R first, otherwise these
 functions will not run. However, R is free to install (for instructions,
 see ‘requirements - install R’ above).
 
-I will provide an example in Stata, as it is commonly used by
+I will provide examples in Stata and SAS, as they are commonly used by
 researchers working with TAF data. I may be able to provide further
 examples of how to run R functions in other languages or write the
 functions themselves in other languages upon request. Please contact me
@@ -83,11 +82,11 @@ You must first write an R script that simply reads in the data you wish
 to use, calls the function you wish to use, and writes any results you
 wish to use to a format you can import to Stata. For example:
 
-`my_data <- read.csv('/path/to/my_data/data.csv')`
+`my_data <- read.csv('/my/path/to/R_input_data.csv')`
 
 `output_data <- taf.functions::get_apr_data_quality_measures(taf_prvdr_base_df=my_data)`
 
-`write.csv(output_data, '/path/to/my/data/output_data.csv'`
+`write.csv(output_data, '/my/path/to/R_output_data.csv'`
 
 Save this R script, and there is no more R programming necessary.
 
@@ -107,16 +106,16 @@ In Windows, you must first put the path to your R executable file, e.g.
 
 Thus, to execute an R script, you can use ‘shell Rscript’, or ’shell
 “C:\R\R-4.2.1\bin\R.exe” Rscript. Say you saved your R script to
-my_r\_script.R - the following Stata code should execute your R script
+my_r_script.R - the following Stata code should execute your R script
 from Stata:
 
 `<your stata code here>`
 
-`export delimited my_taf_data.csv`
+`export delimited R_input_data.csv`
 
 `shell "C:\R\R-4.2.1\bin\R.exe" Rscript my_r_script.R`
 
-`import delimited my_rscript_output.csv`
+`import delimited R_output_data.csv`
 
 `<your stata code here>`
 
@@ -125,7 +124,92 @@ e.g.:
 
 `shell "C:\R\R-4.2.1\bin\R.exe" CMD BATCH my_r_script.R`
 
-## List of Current Functions:
+**SAS Example:**
+
+SAS, like Stata, has the capability of executing operating system
+commands from the SAS coding environment, and this capability can be
+used to tell the operating system to run R scripts from the SAS
+environment. Thus, Just like for Stata, you must first write an R script
+that simply reads in the data you wish to use, calls the function you
+wish to use, and writes any results you wish to use to a format you can
+import to Stata. For example:
+
+`my_data <- read.csv('/my/path/to/R_input_data.csv')`
+
+`output_data <- taf.functions::get_apr_data_quality_measures(taf_prvdr_base_df=my_data)`
+
+`write.csv(output_data, '/my/path/to/R_output_data.csv'`
+
+In SAS, operating system commands are given via the ‘X’ command. Thus,
+if you are using Windows, you must first put the path to your R
+executable file, e.g. C:\R\R-4.2.1\bin\R.exe.
+
+`C:\R\R-4.2.1\bin\R.exe my_rscript.R`
+
+Will tell the operating system to execute your R script on a Windows
+system, although you may need to change the path above to reflect the
+path to your R executable on your system. In Unix systems, the following
+is sufficient:
+
+`Rscript my_rscript.R`
+
+Thus, to execute an R script, you can use ‘X Rscript my_rscript’, or ’X
+C:\R\R-4.2.1\bin\R.exe my_rscript, or even write a macro to do this for
+any R script. Say you saved your R script to my_r_script.R - the
+following SAS code should write your data to a file that the above R
+script would read in, execute a function on, and then write out. It
+would then read in your output data, and you could continue your SAS
+program with the data that had been manipulated by the R function.
+
+`%macro run_r_script(path_to_r_script);`
+
+`X "C:\R\R-4.2.1\bin\R.exe path_to_r_script";`
+
+`/* X "Rscript path_to_r_script" for unix systems*/`
+
+`%mend;`
+
+`/* <YOUR SAS CODE HERE /*`
+
+`%let R_input_data_path = 'C: \my\path\to\R_input_data.csv';`
+
+`proc export`
+
+`data = r_input_data`
+
+`outfile = &R_input_data_path`
+
+`dbms = csv`
+
+`replace;`
+
+`run;`
+
+`%run_r_script(C:\path\to\my\r_script.R)`
+
+`%let R_output_data_path = 'C: \my\path\to\R_out_data.csv';`
+
+`proc import`
+
+`data = work.r_output_data`
+
+`outfile = &R_output_data_path`
+
+`dbms = csv`
+
+`replace;`
+
+`run;`
+
+`<your SAS code here>`
+
+Please note that while these examples allow you to execute functions
+from this R library in SAS and Stata environments, they still require
+the execution of R code. Thus, they will only work on systems where R is
+installed and accessible. For the same reason, they will not work in the
+VRDC environment, where R can only be accessed via Databricks.
+
+List of Current Functions:
 
 <u>**get_apr_data_quality_measures()**</u>
 
@@ -316,7 +400,7 @@ the original column
 
 <u>Example:</u>
 
-new_df \<- fill_in_missing_demographic_data \<- function(
+new_df \<- fill_in_missing_demographic_data(
 
 demog_data=taf_demog_elig_base_2016_to_2018_df,
 
