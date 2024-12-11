@@ -14,7 +14,7 @@
 #' the bene_state_cd == 26 indicating Michigan
 #' @export
 michigan_county_fips_fix_17_18_19 <- function(taf_demog_elig_base, year){
-  
+  taf_demog_elig_base <- data.frame(taf_demog_elig_base)
   # get NBER crosswalk (seperate by year - these are stored in the taf.functions
   # library / no need for a file)
   if (year == 2017){
@@ -39,24 +39,15 @@ michigan_county_fips_fix_17_18_19 <- function(taf_demog_elig_base, year){
   # want output df to be identical to input df save for county fips changes
   # so we must preserve the order of rows, since this function will scramble them 
   taf_demog_elig_base$order <- 1:nrow(taf_demog_elig_base)
-  not_mi_df <- taf_demog_elig_base[taf_demog_elig_base$bene_state_cd != '26',]
-  
+  not_mi_df <- taf_demog_elig_base[taf_demog_elig_base$bene_state_cd != '26' & !is.na(taf_demog_elig_base$bene_state_cd),]
+  mi_df     <- taf_demog_elig_base[taf_demog_elig_base$bene_state_cd == '26' & !is.na(taf_demog_elig_base$bene_state_cd),]
   # treat NAs as Michigan unless county fips is not a valid MI county
   # if county is also NA, assume it is in MI
   na_df <- taf_demog_elig_base[is.na(taf_demog_elig_base$bene_state_cd),]
   good_na_df <- na_df[is.na(na_df$bene_cnty_cd) | (na_df$bene_cnty_cd %in% xwalk$fipscounty),]
   bad_na_df <- na_df[!is.na(na_df$bene_cnty_cd) & !(na_df$bene_cnty_cd %in% xwalk$fipscounty),]
   not_mi_df <- rbind(not_mi_df, bad_na_df)
-  
-  
-  # limit data to Michigan, if the user did not (note that the issue is with FIPS
-  # codes for MI counties, which are present wherever the Michigan state FIPS codes
-  # is in the data - this sometimes happens even when state_cd is not MI - essentially
-  # state_cd and bene_state_cd don't always match, and this function is needed wherever
-  # bene_state_cd is Michigan)
-  mi_df <- taf_demog_elig_base[taf_demog_elig_base$bene_state_cd == "26",]
   mi_df <- rbind(mi_df, good_na_df)
-  
   
   # the bene_cnty_cd values seem to be SSA codes + 1
   # thus, subtract one from each bene_cnty_cd to get SSA cd, then convert to 
@@ -67,7 +58,7 @@ michigan_county_fips_fix_17_18_19 <- function(taf_demog_elig_base, year){
   mi_df$ssacd[nchar(mi_df$ssacd) == 2 & !is.na(mi_df$ssacd)] <- paste0('0', mi_df$ssacd[nchar(mi_df$ssacd) == 2  & !is.na(mi_df$ssacd)])
   mi_df$ssacd[nchar(mi_df$ssacd) == 1 & !is.na(mi_df$ssacd)] <- paste0('00', mi_df$ssacd[nchar(mi_df$ssacd) == 1 & !is.na(mi_df$ssacd)])
   
-  
+
   # merge, replace bene_cnty_cd while preserving the old
   mi_df <- merge(mi_df, xwalk, by='ssacd', all.x=T)
   mi_df$orig_bene_cnty_cd <- mi_df$bene_cnty_cd
@@ -81,6 +72,7 @@ michigan_county_fips_fix_17_18_19 <- function(taf_demog_elig_base, year){
   if (nrow(not_mi_df) != 0){
     not_mi_df$orig_bene_cnty_cd <- NA
     out_df <- rbind(mi_df, not_mi_df)
+
   } else{
     out_df <- mi_df
   }
