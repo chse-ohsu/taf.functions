@@ -18,7 +18,7 @@ michigan_county_fips_fix_17_18_19 <- function(taf_demog_elig_base, year){
   # want output df to be identical to input df save for county fips changes
   # so we must preserve the order of rows, since this function will scramble them 
   taf_demog_elig_base$order <- 1:nrow(taf_demog_elig_base)
-  not_mi_df <- taf_demog_elig_base[taf_demog_elig_base$bene_cnty_cd != '26',]
+  not_mi_df <- taf_demog_elig_base[taf_demog_elig_base$bene_state_cd != '26',]
   
   
   # limit data to Michigan, if the user did not (note that the issue is with FIPS
