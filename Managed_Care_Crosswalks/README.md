@@ -40,7 +40,23 @@ For example:
   crosswalk=2021_crosswalk_no_ids, 
   taf_mngd_care_plan_base_all_states=2021_apl_data, 
   year=2021)
-  
+
+After running this code, I recommend deleting rows that have TAF mc_plan_ids
+but no claims and no enrollment. These plans were unlikely to have really been
+operating in the years in which they are reported that way.
+
+#NOTE - CHSE has the following row counts for each year of APL data -
+2017 - 11,118
+2018 - 10,857
+2019 - 10,934
+2020 - 10,522
+2021 - 10,256
+
+The code rests on the assumption that your input data for the 
+'taf_mngd_care_plan_base_all_states' parameter will have these same row counts 
+(the output of the function will have a different rowcount, as some mc_plan_ids
+are repeated in the crosswalk, and some will be NA where data from another source
+has no equivalent in TAF).
   
 If you have trouble implementing this, or you cannot use R and prefer to run this
 in a different programming language, or have other ideas on how we can share the

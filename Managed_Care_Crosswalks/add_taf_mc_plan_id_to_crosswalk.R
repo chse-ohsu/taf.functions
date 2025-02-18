@@ -12,7 +12,10 @@ add_taf_mc_plan_id_to_crosswalk <- function(crosswalk, taf_mngd_care_plan_base_a
   #order in the same way the crosswalk is ordered
   taf_mngd_care_plan_base_all_states <- taf_mngd_care_plan_base_all_states[order(taf_mngd_care_plan_base_all_states$state_cd, taf_mngd_care_plan_base_all_states$mc_plan_id)]
 
-  #add NAs and repeated mc_plan_ids to match the crosswalk as necessary
+  # add NAs and repeated mc_plan_ids to match the crosswalk as necessary
+  # the special rows data denotes which rows in the crosswalks have repeated
+  # TAF mc_plan_ids or rows where TAF mc_plan_id is missing due to the CMS plan 
+  # being unmatched to any TAF plan
   special_rows <- read.csv(paste0('Managed_Care_Crosswalks/', year, '_special_rows.csv'))
 
   for (i in 1:(nrow(taf_mngd_care_plan_base_all_states) + nrow(special_rows))){
