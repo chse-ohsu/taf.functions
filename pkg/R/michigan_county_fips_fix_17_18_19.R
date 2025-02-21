@@ -30,6 +30,7 @@ michigan_county_fips_fix_17_18_19 <- function(taf_demog_elig_base, year){
   # Wayne County, which is where Detroit is located. In addition, there appears 
   # to be a code 0, which is not a valid FIPS or CON code. I'm matching that to 
   # 990, the FIPS code for 'statewide'.
+  # Emma and Sabin please check - is this a good way of handling '00'?
   con_codes  <- c(0:84)
   con_codes <- sprintf("%02d", con_codes)
   
@@ -83,7 +84,25 @@ michigan_county_fips_fix_17_18_19 <- function(taf_demog_elig_base, year){
   mi_df$orig_bene_cnty_cd <- mi_df$bene_cnty_cd
   mi_df$con_codes <- mi_df$bene_cnty_cd
   mi_df <- merge(mi_df, county_crosswalk, by='con_codes', all.x=T)
+  
+  #replace all CON codes with FIPS codes
   mi_df$bene_cnty_cd[!is.na(mi_df$fips_codes)] <- mi_df$fips_codes[!is.na(mi_df$fips_codes)]
+  
+  # if a value would have been a valid FIPS code if we pad it with a 0 should we
+  # do that? It appears this doesn't happen in 2018, but I thought you mentioned
+  # it sometimes does (a three-digit FIPS code would have been left untouched by
+  # the line of code above this doing the CON-to-FIPS change and wouldn't need to
+  # be padded now)
+  # Emma and Sabin please check
+  
+  # This is a gross line of code but I have to write in base R for this to work as
+  # a library - this should look for bene_cnty_codes that would be valid FIPS
+  # codes if they had a leading 0 and are not valid CON codes, and adds a leading 0
+  mi_df$bene_cnty_cd[is.na(mi_df$fips_codes) & 
+                       paste0('0', mi_df$bene_cnty_cd) %in% county_crosswalk$fips_codes] <-
+    paste0('0', mi_df$bene_cnty_cd)[is.na(mi_df$fips_codes) & 
+                                      paste0('0', mi_df$bene_cnty_cd) %in% county_crosswalk$fips_codes]
+  
 
   
   #discard cols no longer needed
