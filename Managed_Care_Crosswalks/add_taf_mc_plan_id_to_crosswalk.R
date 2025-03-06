@@ -60,11 +60,3 @@ add_taf_mc_plan_id_to_crosswalk <- function(crosswalk, taf_mngd_care_plan_base_a
   return(crosswalk)
 }
 
-taf_mngd_care_plan_base_all_states <- chse::get_taf(
-  file_type = 'taf_mngd_care_plan_base',
-  state='all',
-  year=2017
-)
-year <- 2017
-crosswalk <- read.csv('Managed_Care_Crosswalks/2017_Crosswalk.csv')
-crosswalk_w_ids <- add_taf_mc_plan_id_to_crosswalk(crosswalk, taf_mngd_care_plan_base_all_states, year)
