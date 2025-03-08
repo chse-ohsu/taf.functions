@@ -56,24 +56,22 @@ add_taf_mc_plan_id_to_crosswalk <- function(crosswalk, taf_mngd_care_plan_base_a
 
   #add to crosswalk
   crosswalk <- cbind(crosswalk, taf_mngd_care_plan_base_all_states$taf_mc_plan_id)
-  crosswalk$taf_mngd_care_plan_id <- crosswalk$`taf_mngd_care_plan_base_all_states$taf_mc_plan_id`
+  crosswalk$taf_mc_plan_id <- crosswalk$`taf_mngd_care_plan_base_all_states$taf_mc_plan_id`
   crosswalk$`taf_mngd_care_plan_base_all_states$taf_mc_plan_id` <- NULL
   
   return(crosswalk)
 }
 
+# 
 # taf_mngd_care_plan_base_all_states <- chse::get_taf(
 #   file_type = 'taf_mngd_care_plan_base',
 #   state='all',
-#   year=2019
+#   year=year
 # )
-# taf_mngd_care_plan_base_all_states$row_num <- 1:nrow(taf_mngd_care_plan_base_all_states)
-# year <- 2019
-# crosswalk <- read.csv('Managed_Care_Crosswalks/2019_Crosswalk.csv')
+# 
+# crosswalk <- read.csv(paste0('Managed_Care_Crosswalks/', year, '_Crosswalk.csv'))
 # 
 # 
 # crosswalk_w_ids <- add_taf_mc_plan_id_to_crosswalk(crosswalk, taf_mngd_care_plan_base_all_states, year)
 # 
-# crosswalk <- crosswalk %>%
-#   mutate(count = ave(interaction(state_cd, ), interaction(col1, col2), FUN = seq_along))
 # 
