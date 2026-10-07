@@ -45,7 +45,7 @@ fix_il_claims <- function(claims_dt){
     
     # Sort each family newest to oldest; rows with missing dates go last so they
     # are only used as a final fallback
-    setorder(claims_dt, clm_family_id, -adjdctn_dt, na.last = TRUE)
+    data.table::setorder(claims_dt, clm_family_id, -adjdctn_dt, na.last = TRUE)
     
     # All columns to backfill (everything except the grouping key and the flag)
     
@@ -55,18 +55,35 @@ fix_il_claims <- function(claims_dt){
     # All columns to backfill (everything except the grouping key, the flag, and amounts)
     cols <- setdiff(names(claims_dt), c("clm_family_id", "is_latest", amt_cols)) #NEW
     
-    #Fill NAs. Note: in 2022 shard 0, this didn't fill anything. Other years may differ.
-    claims_dt[, (cols) := {
-      # Capture the flag for this group so the function below can use it
-      flag <- is_latest
-      lapply(.SD, function(x) {
-        # In the flagged row, replace an NA with the first non-NA value in this
-        # family (the most recent one, given the sort). If the whole column is NA
-        # for the family, this gives NA and the cell stays NA.
-        x[flag & is.na(x)] <- x[!is.na(x)][1]
-        x
-      })
-    }, by = clm_family_id, .SDcols = cols]
+    #Fill NAs
+    # Vectors of ID and latest flag. Element i of each one refers to row i of claims_dt
+    fam <- claims_dt$clm_family_id
+    latest <- claims_dt$is_latest
+    
+    for (col in cols) {
+      # Get the column to be filled (same row order as fam and latest)
+      x <- claims_dt[[col]]
+      
+      # Get row numbers of claims_dt that need filling: flagged as latest AND missing in this column.
+      # latest and is.na(x) line up by position, so `&` compares row by row.
+      na_row_nums <- which(latest & is.na(x))
+      
+      # If no flagged rows are missing this column, skip to the next column
+      if (length(na_row_nums) == 0) next
+      
+      # Row numbers where this column has a value
+      not_na_row_nums <- which(!is.na(x))
+      # Keep the first of those rows in each family. With the sort, that's the most recent non-NA.
+      value_rows <- not_na_row_nums[!duplicated(fam[not_na_row_nums])]
+      
+      # For each row needing a fill, look up its family in value_rows, and take that family's source row number. 
+      # If the family has no non-NA value, match() gives NA, and the cell stays NA.
+      source_row_nums <- value_rows[match(fam[na_row_nums], fam[value_rows])]
+      
+      # Write by reference: in rows `na_row_nums` of column `col`, put the values from the source rows
+      data.table::set(claims_dt, i = na_row_nums, j = col, value = x[source_row_nums])
+    }
+    
     
     # Sum amount columns over all claims in the family
     claims_dt[, (amt_cols) := lapply(.SD, sum, na.rm = TRUE), by = clm_family_id, .SDcols = amt_cols] #NEW
@@ -75,7 +92,7 @@ fix_il_claims <- function(claims_dt){
     #limit to latest date
     claims_dt <- claims_dt[is_latest == TRUE]
     
-    #deduplicate among claims with latest date. No way to know which is correct, so drop at random. 
+    #deduplicate among claims with latest date
     claims_dt <- unique(claims_dt, by = "clm_family_id")
   }
   
@@ -86,3 +103,4 @@ fix_il_claims <- function(claims_dt){
   return(claims_dt)
   
 }
+
