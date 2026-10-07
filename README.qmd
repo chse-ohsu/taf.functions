@@ -11,9 +11,9 @@ This repository's purpose is to assist people who work with data from the T-MSIS
 
 Using this repository provides value to researchers by:
 
--   allowing those working with TAF to utilize easy-to-use functions to perform frequently needed data preparation and manipulation functions rather than writing time-consuming functions themselves
+- allowing those working with TAF to utilize easy-to-use functions to perform frequently needed data preparation and manipulation functions rather than writing time-consuming functions themselves
 
--   providing consistent and standardized procedures and definitions (changes/overriding definitions is possible for those who wish)
+- providing consistent and standardized procedures and definitions (changes/overriding definitions is possible for those who wish)
 
 ## Setup & Requirements
 
@@ -21,11 +21,11 @@ To use the taf.functions package, you will first need to install R and the 'devt
 
 [1) Install R:]{.underline}
 
--   Windows: [Download R-4.3.1 for Windows. The R-project for statistical computing.](https://cran.r-project.org/bin/windows/base/)
+- Windows: [Download R-4.3.1 for Windows. The R-project for statistical computing.](https://cran.r-project.org/bin/windows/base/)
 
--   OS X: [R for macOS (r-project.org)](https://cran.r-project.org/bin/macosx/)
+- OS X: [R for macOS (r-project.org)](https://cran.r-project.org/bin/macosx/)
 
--   Linux: [Index of /bin/linux (r-project.org)](https://cran.r-project.org/bin/linux/)
+- Linux: [Index of /bin/linux (r-project.org)](https://cran.r-project.org/bin/linux/)
 
 2\) Install 'devtools' package:
 

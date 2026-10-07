@@ -16,5 +16,9 @@ is incorrect, and appears to have the value of the county SSA code plus one,
 rather than the FIPS code. This can be corrected using a publicly available
 FIPS to SSA crosswalk. This function makes this correction, stores the original
 bene_cnty_cd in a column called orig_bene_cnty_cd, and preserves the original
-order of the data
+order of the data.
+}
+\details{
+Thank you to Kelsey Watson at OHSU and Emma Mairson & Sabin Gaire at U Pittsburg
+for contributing to this function
 }
